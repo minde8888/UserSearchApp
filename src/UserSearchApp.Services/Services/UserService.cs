@@ -33,22 +33,27 @@ namespace UserSearchApp.Services.Services
                 throw new UserNotFoundException();
             }
 
-            // DublicateCheckuser(result.Name, result.Username); 
-            //if (userAleredyExist)
-            //{
-            //    throw new UserExistsException();
-            //}
+            var userAleredyExist = await DublicateCheck(result.Name, result.Username);
+            if (userAleredyExist)
+            {
+                throw new UserExistsException();
+            }
 
             var user = _mapper.Map<UserInfo>(result);
 
             var response = await _userRepository.AddUserAsync(user);
-             DublicateCheckuser(response.Name, response.UserName);
+            await UserExistCheck(response.Name, response.UserName);
 
-
-            return resultToReturn;
+            return response;
         }
 
-        public async Task DublicateCheckuser(string name, string unserName)
+        public async Task<bool> DublicateCheck(string name, string unserName)
+        {
+            var userExist = await _userRepository.GetAsyncUser(name, unserName);
+            return userExist;
+        }
+
+        public async Task UserExistCheck(string name, string unserName)
         {
             var userExist = await _userRepository.GetAsyncUser(name, unserName);
 
@@ -56,6 +61,6 @@ namespace UserSearchApp.Services.Services
             {
                 await SearchAsync(name);
             }
-         }
+        }
     }
 }
