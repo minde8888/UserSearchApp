@@ -1,0 +1,7 @@
+
+GET https://localhost:7004/User?name=Kurtis Weissnat HTTP/1.1
+
+####
+
+GET https://localhost:7004/User?name=Kusafsrtis HTTP/1.1
+
